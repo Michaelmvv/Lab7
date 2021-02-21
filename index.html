@@ -79,12 +79,36 @@
 
     <!-- Main Script -->
     <script type="module">
+
+      let recform = document.getElementById("recordForm");
+      let recid=  document.getElementById("recordIDcontainer");
+      let output = document.getElementById("output");
+
+
+      function hideForm(){
+        recform.style.display = 'none';
+        recid.style.display = 'none';
+      }
+
+      let author = document.getElementById("author");
+      let title = document.getElementById("title");
+      let idInput = document.getElementById("recordID");
+      function clearInputs(){
+        author.value = '';
+        title.value = '';
+        idInput.value = '';
+      }
+      function updateText(res){
+        if (res.ok) res.json().then(data => output.textContent = JSON.stringify(data));
+        else output.textContent = "Error: " + res.statusText + res.status;
+      }
       // This function should fetch all of the data from the given endpoint.
       // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
-        // TODO
+        hideForm();
+        fetch(document.getElementById("endpoint").value).then(updateText);
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -92,15 +116,27 @@
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
-        // TODO
+        hideForm();
+        let url = document.getElementById("endpoint").value + "/" + prompt("Eneter Record ID")
+        fetch(url).then(updateText);
       }
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
-        // TODO
+      function createRecord(arg1) {
+        if (arg1 == "show"){
+          clearInputs();
+          recform.style.display = 'inline';
+          recid.style.display = 'none';
+        }else {
+          fetch(document.getElementById("endpoint").value, {
+            method: "POST",
+            headers: {"Content-type": "application/json"},
+            body: JSON.stringify({"title":title.value, "author":author.value})
+          }).then(updateText);
+        }
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.

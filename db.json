@@ -9,11 +9,6 @@
       "title": "foo",
       "author": "bar",
       "id": 2
-    },
-    {
-      "title": "foo",
-      "author": "test",
-      "id": 3
     }
   ],
   "comments": [
